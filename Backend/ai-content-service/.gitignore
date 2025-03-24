@@ -6,7 +6,7 @@ target/
 
 # Java properties
 **/secret-application.properties
-../.idea/vcs.xml
+#../.idea/vcs.xml
 
 
 ### STS ###

@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 
 @FeignClient(name="aiClient",
-        url="${jamba.api.url}",
+        url="${api.url}",
         configuration= FeignClientConfig.class)
 public interface AiClient {
 

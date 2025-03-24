@@ -15,7 +15,7 @@ import java.util.List;
 public class AiContentService {
     private final AiClient aiClient;
 
-    @Value("${jamba.api.key}")
+    @Value("${api.key}")
     private String apiKey;
 
     public String generateDescription(String productName, String category) {
