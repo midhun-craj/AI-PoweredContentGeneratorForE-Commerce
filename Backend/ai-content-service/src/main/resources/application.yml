@@ -1,0 +1,28 @@
+server:
+  port: ${SERVER_PORT:8300}
+
+spring:
+  application:
+    name: ai-content-service
+
+api:
+  key: ${API_KEY}
+  url: ${API_URL}
+
+feign:
+  client:
+    config:
+      aiClient:
+        connectTimeout: 5000
+        readTimeout: 5000
+        loggerLevel: NONE
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health
+  endpoint:
+    health:
+      probes:
+        enabled: true

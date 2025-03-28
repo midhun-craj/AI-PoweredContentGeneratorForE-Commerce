@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 public class AiContentController {
     private final AiContentService contentService;
 
-    @PostMapping("/generate-description")
+    @PostMapping("/generate")
     public ResponseEntity<String> generateDescription(@RequestBody ProductRequest productRequest) {
         return ResponseEntity.ok(contentService.generateDescription(productRequest.getProductName(),
                 productRequest.getCategory()));

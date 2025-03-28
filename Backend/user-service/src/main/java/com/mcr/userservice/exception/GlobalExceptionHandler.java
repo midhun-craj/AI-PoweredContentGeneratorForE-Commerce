@@ -23,7 +23,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<?> handleBadCredentialException(BadCredentialsException e) {
         return ResponseEntity
                 .status(HttpStatus.UNAUTHORIZED)
-                .body(Map.of("error", e.getMessage()));
+                .body(Map.of("error", "Invalid credentials."));
     }
 
     @ExceptionHandler(UsernameNotFoundException.class)

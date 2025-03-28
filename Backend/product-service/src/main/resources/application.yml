@@ -1,9 +1,9 @@
 server:
-  port: ${SERVER_PORT:8100}
+  port: ${SERVER_PORT:8200}
 
 spring:
   application:
-    name: user-service
+    name: product-service
 
   datasource:
     url: ${DB_URL}
@@ -15,14 +15,6 @@ spring:
     database-platform: org.hibernate.dialect.MySQLDialect
     hibernate:
       ddl-auto: update
-    show-sql: true
-
-jwt:
-  secret: ${JWT_SECRET}
-  access:
-    expiration: ${JWT_ACCESS_EXPIRATION}
-  refresh:
-    expiration: ${JWT_REFRESH_EXPIRATION}
 
 management:
   endpoints:

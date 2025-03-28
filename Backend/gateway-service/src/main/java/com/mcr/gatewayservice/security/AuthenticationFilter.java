@@ -12,6 +12,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
+import java.net.InetSocketAddress;
 import java.util.Set;
 
 @Component
@@ -22,8 +23,9 @@ public class AuthenticationFilter implements GlobalFilter, Ordered {
 
     private static final Set<String> openApiEndPoints =
             Set.of(
-                    "/api/users/login",
-                    "api/users/register"
+                    "/api/auth/login",
+                    "/api/auth/register",
+                    "/actuator/health"
             );
 
     @Override
@@ -31,6 +33,26 @@ public class AuthenticationFilter implements GlobalFilter, Ordered {
         String path = exchange.getRequest().getPath().toString();
 
         if(isOpenApiEndpoint(path)) {
+
+            if(path.startsWith("/actuator/health")) {
+
+                String remoteIp = exchange.getRequest().getHeaders().getFirst("X-Forwarded-For");
+
+                if(remoteIp == null) {
+                    InetSocketAddress socketAddress = exchange.getRequest().getRemoteAddress();
+                    remoteIp = (socketAddress != null && socketAddress.getAddress() != null)
+                            ? socketAddress.getAddress().getHostAddress()
+                            : null;
+
+                } else {
+                    remoteIp = remoteIp.split(",")[0].trim();
+                }
+
+                if(!("127.0.0.1".equals(remoteIp) || "0:0:0:0:0:0:0:1".equals(remoteIp) || "::1".equals(remoteIp))) {
+                    exchange.getResponse().setStatusCode(HttpStatus.FORBIDDEN);
+                    return exchange.getResponse().setComplete();
+                }
+            }
             return chain.filter(exchange);
         }
 

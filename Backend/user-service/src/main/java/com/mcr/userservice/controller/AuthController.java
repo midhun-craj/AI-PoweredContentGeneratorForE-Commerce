@@ -5,7 +5,6 @@ import com.mcr.userservice.model.apiRequest.RefreshRequest;
 import com.mcr.userservice.model.apiRequest.RegisterRequest;
 import com.mcr.userservice.model.apiResponse.LoginResponseDto;
 import com.mcr.userservice.model.apiResponse.RefreshResponseDto;
-import com.mcr.userservice.model.apiResponse.UserDto;
 import com.mcr.userservice.model.apiResponse.UserProfileResponseDto;
 import com.mcr.userservice.service.UserService;
 import lombok.RequiredArgsConstructor;

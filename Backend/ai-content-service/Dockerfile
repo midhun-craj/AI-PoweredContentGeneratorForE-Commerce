@@ -1,4 +1,4 @@
-# Building the .jar file using the maven
+# Building the .jar file using maven
 FROM maven:3.9.5-eclipse-temurin-17 AS builder
 WORKDIR /app
 
@@ -19,8 +19,6 @@ RUN useradd -m appuser
 USER appuser
 
 COPY --from=builder --chown=appuser:appuser /app/target/*.jar app.jar
-
-RUN chmod +x app.jar
 
 ENTRYPOINT ["java"]
 CMD ["-jar", "app.jar"]

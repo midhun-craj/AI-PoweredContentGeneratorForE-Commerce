@@ -4,8 +4,10 @@ target/
 !**/src/main/**/target/
 !**/src/test/**/target/
 
-# Java properties
-**/secret-application.properties
+# Enviornment files
+.env
+.env.*
+
 #../.idea/vcs.xml
 
 

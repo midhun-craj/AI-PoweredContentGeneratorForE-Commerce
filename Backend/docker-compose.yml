@@ -1,0 +1,144 @@
+services:
+  mysql-user:
+    image: mysql:8.4
+    container_name: mysql-user
+    environment:
+      MYSQL_DATABASE: user_service_db
+      MYSQL_ROOT_PASSWORD: ${MYSQL_USER_ROOT_PASSWORD}
+#    ports:
+#      - "3306:3306"
+    volumes:
+      - mysql_user_data:/var/lib/mysql
+    restart: always
+    networks:
+      - backend
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "mysql-user"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  user-service:
+    build:
+      context: ./user-service
+      dockerfile: Dockerfile
+    container_name: user-service
+#    ports:
+#      - "8100:8100"
+    expose:
+      - "8100"
+    env_file:
+      - ./user-service/.env
+    entrypoint: ["sh", "-c", "exec java $JAVA_OPTS -jar app.jar"]
+    depends_on:
+      mysql-user:
+        condition: service_healthy
+    restart: always
+    networks:
+      - backend
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://user-service:8100/actuator/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+    volumes:
+      - maven_cache:/root/.m2
+
+  mysql-product:
+    image: mysql:8.4
+    container_name: mysql-product
+    environment:
+      MYSQL_DATABASE: product_service_db
+      MYSQL_ROOT_PASSWORD: ${MYSQL_PRODUCT_ROOT_PASSWORD}
+#    ports:
+#      - "3306:3306"
+    volumes:
+      - mysql_product_data:/var/lib/mysql
+    restart: always
+    networks:
+      - backend
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "mysql-product"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  product-service:
+    build:
+      context: ./product-service
+      dockerfile: Dockerfile
+    container_name: product-service
+    #    ports:
+    #      - "8200:8200"
+    expose:
+      - "8200"
+    env_file:
+      - ./product-service/.env
+    entrypoint: ["sh", "-c", "exec java $JAVA_OPTS -jar app.jar"]
+    depends_on:
+      mysql-product:
+        condition: service_healthy
+    restart: always
+    networks:
+      - backend
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://product-service:8200/actuator/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+    volumes:
+      - maven_cache:/root/.m2
+
+  ai-content-service:
+    build:
+      context: ./ai-content-service
+      dockerfile: Dockerfile
+    container_name: ai-content-service
+    #    ports:
+    #      - "8300:8300"
+    expose:
+      - "8300"
+    env_file:
+      - ./ai-content-service/.env
+    entrypoint: ["sh", "-c", "exec java $JAVA_OPTS -jar app.jar"]
+    restart: always
+    networks:
+      - backend
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://ai-content-service:8300/actuator/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+    volumes:
+      - maven_cache:/root/.m2
+
+  gateway-service:
+    build:
+      context: ./gateway-service
+      dockerfile: Dockerfile
+    container_name: gateway-service
+    ports:
+      - "8000:8000"
+    expose:
+      - "8000"
+    env_file:
+      - ./gateway-service/.env
+    entrypoint: ["sh", "-c", "exec java $JAVA_OPTS -jar app.jar"]
+    restart: always
+    networks:
+      - backend
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://gateway-service:8000/actuator/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+    volumes:
+      - maven_cache:/root/.m2
+
+networks:
+  backend:
+
+volumes:
+  mysql_user_data:
+  mysql_product_data:
+  maven_cache:

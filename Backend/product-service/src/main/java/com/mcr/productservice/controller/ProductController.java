@@ -1,6 +1,7 @@
 package com.mcr.productservice.controller;
 
 import com.mcr.productservice.model.Product;
+import com.mcr.productservice.model.apirequest.UpdateProductDescriptionRequest;
 import com.mcr.productservice.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -39,7 +40,9 @@ public class ProductController {
     }
 
     @PutMapping("/{id}/description")
-    public ResponseEntity<Product> updateProduct(@PathVariable("id") Long id, @RequestBody String description) {
-        return ResponseEntity.ok(productService.updateDescription(id, description));
+    public ResponseEntity<Product> updateProduct(@PathVariable("id") Long id,
+                                                 @RequestBody UpdateProductDescriptionRequest
+                                                         request) {
+        return ResponseEntity.ok(productService.updateDescription(id, request.getDescription()));
     }
 }
